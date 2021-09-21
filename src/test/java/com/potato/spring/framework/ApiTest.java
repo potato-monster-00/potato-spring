@@ -1,25 +1,28 @@
 package com.potato.spring.framework;
 
+import com.potato.spring.framework.beans.User;
 import org.junit.Test;
+import com.potato.spring.framework.beans.factory.config.BeanDefinition;
+import com.potato.spring.framework.beans.factory.support.DefaultListableBeanFactory;
 
 /**
  * @author potato
- * @date 2021/9/18 10:12 下午
+ * @date 2021/9/19 6:06 下午
  * @blame
  */
 public class ApiTest {
 
     @Test
     public void test_BeanFactory() {
-        // 构建BeanDefinition
-        BeanDefinition beanDefinition = new BeanDefinition(new User());
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        // 注册BeanDefinition
-        BeanFactory beanFactory = new BeanFactory();
+        BeanDefinition beanDefinition = new BeanDefinition(User.class);
         beanFactory.registerBeanDefinition("user", beanDefinition);
 
-        // 加载Bean
         User user = (User) beanFactory.getBean("user");
         user.queryUser();
+
+        User singleUser = (User) beanFactory.getSingleton("user");
+        singleUser.queryUser();
     }
 }
