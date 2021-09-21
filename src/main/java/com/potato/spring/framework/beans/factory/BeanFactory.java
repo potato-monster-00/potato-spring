@@ -1,6 +1,6 @@
 package com.potato.spring.framework.beans.factory;
 
-import com.potato.spring.framework.beans.BeanException;
+import com.potato.spring.framework.beans.BeansException;
 
 /**
  * @author potato
@@ -9,5 +9,7 @@ import com.potato.spring.framework.beans.BeanException;
  */
 public interface BeanFactory {
 
-    Object getBean(String name) throws BeanException;
+    Object getBean(String name) throws BeansException;
+
+    Object getBean(String name, Object[] args) throws BeansException;
 }

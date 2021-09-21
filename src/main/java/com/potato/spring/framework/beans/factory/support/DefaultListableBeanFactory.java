@@ -1,6 +1,6 @@
 package com.potato.spring.framework.beans.factory.support;
 
-import com.potato.spring.framework.beans.BeanException;
+import com.potato.spring.framework.beans.BeansException;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
 
 import java.util.HashMap;
@@ -21,10 +21,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     @Override
-    protected BeanDefinition getBeanDefinition(String beanName) throws BeanException {
+    protected BeanDefinition getBeanDefinition(String beanName) throws BeansException {
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
         if (beanDefinition == null) {
-            throw new BeanException("No bean named '" + beanName + "' is defined");
+            throw new BeansException("No bean named '" + beanName + "' is defined");
         }
         return beanDefinition;
     }
