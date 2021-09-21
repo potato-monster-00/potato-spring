@@ -1,7 +1,11 @@
 package com.potato.spring.framework.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.potato.spring.framework.beans.BeansException;
+import com.potato.spring.framework.beans.PropertyValue;
+import com.potato.spring.framework.beans.PropertyValues;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
+import com.potato.spring.framework.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
 
@@ -19,12 +23,30 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         Object bean = null;
         try {
             bean = createBeanInstance(beanDefinition, name, args);
+            applyPropertyValues(name, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed.", e);
         }
 
         addSingleton(name, bean);
         return bean;
+    }
+
+    protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+        try {
+            PropertyValues propertyValues = beanDefinition.getPropertyValues();
+            for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+                if (value instanceof BeanReference) {
+                    BeanReference beanReference = (BeanReference) value;
+                    value = getBean(beanReference.getBeanName());
+                }
+                BeanUtil.setFieldValue(bean, name, value);
+            }
+        } catch (Exception e) {
+            throw new BeansException("Error setting property values: " + beanName);
+        }
     }
 
     protected Object createBeanInstance(BeanDefinition beanDefinition, String name, Object[] args) {
@@ -37,6 +59,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        return instantiationStrategy.instantiate(beanDefinition, name, constructorToUse, args);
+        return getInstantiationStrategy().instantiate(beanDefinition, name, constructorToUse, args);
+    }
+
+    public InstantiationStrategy getInstantiationStrategy() {
+        return instantiationStrategy;
+    }
+
+    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
+        this.instantiationStrategy = instantiationStrategy;
     }
 }

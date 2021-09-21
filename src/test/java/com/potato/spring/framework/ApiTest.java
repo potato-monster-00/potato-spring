@@ -1,6 +1,10 @@
 package com.potato.spring.framework;
 
+import com.potato.spring.framework.beans.PropertyValue;
+import com.potato.spring.framework.beans.PropertyValues;
 import com.potato.spring.framework.beans.User;
+import com.potato.spring.framework.beans.UserDAO;
+import com.potato.spring.framework.beans.factory.config.BeanReference;
 import org.junit.Test;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
 import com.potato.spring.framework.beans.factory.support.DefaultListableBeanFactory;
@@ -19,11 +23,18 @@ public class ApiTest {
     public void test_BeanFactory() {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        BeanDefinition beanDefinition = new BeanDefinition(User.class);
+
+        beanFactory.registerBeanDefinition("userDao", new BeanDefinition(UserDAO.class));
+
+        PropertyValues propertyValues = new PropertyValues();
+        propertyValues.addPropertyValue(new PropertyValue("uId", 10001));
+        propertyValues.addPropertyValue(new PropertyValue("userDao", new BeanReference("userDao")));
+
+        BeanDefinition beanDefinition = new BeanDefinition(User.class, propertyValues);
         beanFactory.registerBeanDefinition("user", beanDefinition);
 
-        User user = (User) beanFactory.getBean("user", "potato");
-        user.queryUser();
+        User user = (User) beanFactory.getBean("user");
+        user.queryUserInfo();
     }
 
     @Test

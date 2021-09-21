@@ -7,28 +7,27 @@ package com.potato.spring.framework.beans;
  */
 public class User {
 
-    private String name;
+    private Integer uId;
 
-    public User(String name) {
-        this.name = name;
+    private UserDAO userDao;
+
+    public void queryUserInfo() {
+        System.out.println("queryUserInfo: " + userDao.queryUserName(uId));
     }
 
-    public String getName() {
-        return name;
+    public Integer getUId() {
+        return uId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUId(Integer uId) {
+        this.uId = uId;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                '}';
+    public UserDAO getUserDAO() {
+        return userDao;
     }
 
-    public void queryUser() {
-        System.out.println(this);
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDao = userDAO;
     }
 }
