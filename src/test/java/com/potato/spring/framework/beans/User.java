@@ -8,11 +8,12 @@ package com.potato.spring.framework.beans;
 public class User {
 
     private Integer uId;
-
+    private String company;
+    private String location;
     private UserDAO userDao;
 
     public void queryUserInfo() {
-        System.out.println("queryUserInfo: " + userDao.queryUserName(uId));
+        System.out.println("queryUserInfo: " + userDao.queryUserName(uId) + "," + company + "," + location);
     }
 
     public Integer getUId() {
@@ -21,6 +22,22 @@ public class User {
 
     public void setUId(Integer uId) {
         this.uId = uId;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public UserDAO getUserDAO() {

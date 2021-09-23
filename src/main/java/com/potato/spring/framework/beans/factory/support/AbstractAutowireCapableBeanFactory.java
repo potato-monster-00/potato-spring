@@ -4,7 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import com.potato.spring.framework.beans.BeansException;
 import com.potato.spring.framework.beans.PropertyValue;
 import com.potato.spring.framework.beans.PropertyValues;
+import com.potato.spring.framework.beans.factory.config.AutowireCapableBeanFactory;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
+import com.potato.spring.framework.beans.factory.config.BeanPostProcessor;
 import com.potato.spring.framework.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
@@ -14,7 +16,7 @@ import java.lang.reflect.Constructor;
  * @date 2021/9/19 1:57 下午
  * @blame
  */
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
     private InstantiationStrategy instantiationStrategy = new CglibInstantiationStrategy();
 
@@ -24,12 +26,49 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             bean = createBeanInstance(beanDefinition, name, args);
             applyPropertyValues(name, bean, beanDefinition);
+            bean = initialization(name, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed.", e);
         }
 
         addSingleton(name, bean);
         return bean;
+    }
+
+    protected Object initialization(String name, Object bean, BeanDefinition beanDefinition) {
+        Object wrappedBean = applyBeanPostProcessorBeforeInitialization(bean, name);
+        invokeInitMethods(name, wrappedBean, beanDefinition);
+        wrappedBean = applyBeanPostProcessorAfterInitialization(bean, name);
+        return wrappedBean;
+    }
+
+    private void invokeInitMethods(String name, Object wrappedBean, BeanDefinition beanDefinition) {
+    }
+
+    @Override
+    public Object applyBeanPostProcessorBeforeInitialization(Object existBean, String beanName) throws BeansException {
+        Object result = existBean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            Object current = beanPostProcessor.postProcessBeforeInitialization(result, beanName);
+            if (current == null) {
+                return result;
+            }
+            result = current;
+        }
+        return result;
+    }
+
+    @Override
+    public Object applyBeanPostProcessorAfterInitialization(Object existBean, String beanName) throws BeansException {
+        Object result = existBean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            Object current = beanPostProcessor.postProcessAfterInitialization(result, beanName);
+            if (current == null) {
+                return result;
+            }
+            result = current;
+        }
+        return result;
     }
 
     protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {

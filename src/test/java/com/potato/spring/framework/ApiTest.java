@@ -7,6 +7,9 @@ import com.potato.spring.framework.beans.User;
 import com.potato.spring.framework.beans.UserDAO;
 import com.potato.spring.framework.beans.factory.config.BeanReference;
 import com.potato.spring.framework.beans.factory.xml.XmlBeanDefinitionReader;
+import com.potato.spring.framework.common.MyBeanFactoryPostProcessor;
+import com.potato.spring.framework.common.MyBeanPostProcessor;
+import com.potato.spring.framework.context.support.ClassPathXmlApplicationContext;
 import com.potato.spring.framework.core.io.DefaultResourceLoader;
 import com.potato.spring.framework.core.io.Resource;
 import org.junit.Before;
@@ -81,5 +84,28 @@ public class ApiTest {
     public void test_constructor() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         User user = User.class.getDeclaredConstructor(String.class).newInstance("patato");
         System.out.println(user);
+    }
+
+    @Test
+    public void test_BeanFactoryPostProcessorAndBeanPostProcessor() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+
+        MyBeanFactoryPostProcessor beanFactoryPostProcessor = new MyBeanFactoryPostProcessor();
+        beanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+
+        MyBeanPostProcessor beanPostProcessor = new MyBeanPostProcessor();
+        beanFactory.addBeanPostProcessor(beanPostProcessor);
+
+        User user = beanFactory.getBean("user", User.class);
+        user.queryUserInfo();
+    }
+
+    @Test
+    public void test_ClassPathXml() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_post_processor.xml");
+        User user = applicationContext.getBean("user", User.class);
+        user.queryUserInfo();
     }
 }

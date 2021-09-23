@@ -3,6 +3,7 @@ package com.potato.spring.framework.beans.factory;
 import com.potato.spring.framework.beans.BeansException;
 import com.potato.spring.framework.beans.factory.config.AutowireCapableBeanFactory;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
+import com.potato.spring.framework.beans.factory.config.BeanPostProcessor;
 import com.potato.spring.framework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
@@ -13,4 +14,8 @@ import com.potato.spring.framework.beans.factory.config.ConfigurableBeanFactory;
 public interface ConfigurableListableBeanFactory extends ListableBeanFactory, AutowireCapableBeanFactory, ConfigurableBeanFactory {
 
     BeanDefinition getBeanDefinition(String beanName) throws BeansException;
+
+    void preInstantiateSingletons() throws BeansException;
+
+    void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 }

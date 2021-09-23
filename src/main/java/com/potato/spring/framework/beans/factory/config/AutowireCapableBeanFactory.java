@@ -1,5 +1,6 @@
 package com.potato.spring.framework.beans.factory.config;
 
+import com.potato.spring.framework.beans.BeansException;
 import com.potato.spring.framework.beans.factory.BeanFactory;
 
 /**
@@ -8,4 +9,8 @@ import com.potato.spring.framework.beans.factory.BeanFactory;
  * @blame
  */
 public interface AutowireCapableBeanFactory extends BeanFactory {
+
+    Object applyBeanPostProcessorBeforeInitialization(Object existBean, String beanName) throws BeansException;
+
+    Object applyBeanPostProcessorAfterInitialization(Object existBean, String beanName) throws BeansException;
 }

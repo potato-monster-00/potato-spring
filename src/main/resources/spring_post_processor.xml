@@ -8,4 +8,7 @@
         <property name="location" value="shenyang"/>
         <property name="userDao" ref="userDao"/>
     </bean>
+
+    <bean class="com.potato.spring.framework.common.MyBeanFactoryPostProcessor"/>
+    <bean class="com.potato.spring.framework.common.MyBeanPostProcessor"/>
 </beans>
