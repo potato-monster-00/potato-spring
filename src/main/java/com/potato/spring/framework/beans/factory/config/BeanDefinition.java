@@ -4,12 +4,17 @@ import com.potato.spring.framework.beans.PropertyValues;
 
 import java.util.Optional;
 
+import static com.potato.spring.framework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
+
 /**
  * @author potato
  * @date 2021/9/19 1:53 下午
  * @blame
  */
 public class BeanDefinition {
+
+    private String SCOPE_SINGLE = SCOPE_SINGLETON;
+    private String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
     private Class<?> beanClass;
 
@@ -18,6 +23,11 @@ public class BeanDefinition {
     private String initMethodName;
 
     private String destroyMethodName;
+
+    private String scope = SCOPE_SINGLE;
+
+    private boolean singleton;
+    private boolean prototype;
 
     public BeanDefinition(Class<?> beanClass) {
         this.beanClass = beanClass;
@@ -59,5 +69,19 @@ public class BeanDefinition {
 
     public void setDestroyMethodName(String destroyMethodName) {
         this.destroyMethodName = destroyMethodName;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+        this.singleton = SCOPE_SINGLETON.equals(scope);
+        this.prototype = SCOPE_PROTOTYPE.equals(scope);
+    }
+
+    public boolean isSingleton() {
+        return singleton;
+    }
+
+    public boolean isPrototype() {
+        return prototype;
     }
 }

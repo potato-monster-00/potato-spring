@@ -15,7 +15,8 @@ public class User implements InitializingBean, DisposableBean,
     private Integer uId;
     private String company;
     private String location;
-    private UserDAO userDao;
+    //private UserDAO userDao;
+    private IUserDao userDao;
 
     private ApplicationContext applicationContext;
     private BeanFactory beanFactory;
@@ -48,11 +49,11 @@ public class User implements InitializingBean, DisposableBean,
         this.location = location;
     }
 
-    public UserDAO getUserDAO() {
+    public IUserDao getUserDAO() {
         return userDao;
     }
 
-    public void setUserDAO(UserDAO userDAO) {
+    public void setUserDAO(IUserDao userDAO) {
         this.userDao = userDAO;
     }
 

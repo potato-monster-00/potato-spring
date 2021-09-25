@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
 import com.potato.spring.framework.beans.factory.support.DefaultListableBeanFactory;
+import org.openjdk.jol.info.ClassLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,5 +113,29 @@ public class ApiTest {
 
         System.out.println("applicationContextAware: " + user.getApplicationContext());
         System.out.println("beanFactoryAware: " + user.getBeanFactory());
+    }
+
+    @Test
+    public void test_prototype() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_proxy.xml");
+        applicationContext.registerShutdownHook();
+
+        User user1 = applicationContext.getBean("user", User.class);
+        User user2 = applicationContext.getBean("user", User.class);
+
+        System.out.println(user1);
+        System.out.println(user2);
+
+        System.out.println(user1 + "hex: " + Integer.toHexString(user1.hashCode()));
+        System.out.println(ClassLayout.parseInstance(user1).toPrintable());
+    }
+
+    @Test
+    public void test_factory_bean() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_proxy.xml");
+        applicationContext.registerShutdownHook();
+
+        User user = applicationContext.getBean("user", User.class);
+        user.queryUserInfo();
     }
 }
