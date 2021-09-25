@@ -109,5 +109,8 @@ public class ApiTest {
 
         User user = applicationContext.getBean("user", User.class);
         user.queryUserInfo();
+
+        System.out.println("applicationContextAware: " + user.getApplicationContext());
+        System.out.println("beanFactoryAware: " + user.getBeanFactory());
     }
 }

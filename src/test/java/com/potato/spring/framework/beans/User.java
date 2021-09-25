@@ -1,19 +1,24 @@
 package com.potato.spring.framework.beans;
 
-import com.potato.spring.framework.beans.factory.DisposableBean;
-import com.potato.spring.framework.beans.factory.InitializingBean;
+import com.potato.spring.framework.beans.factory.*;
+import com.potato.spring.framework.context.ApplicationContext;
+import com.potato.spring.framework.context.ApplicationContextAware;
 
 /**
  * @author potato
  * @date 2021/9/19 6:05 下午
  * @blame
  */
-public class User implements InitializingBean, DisposableBean {
+public class User implements InitializingBean, DisposableBean,
+        BeanNameAware, BeanFactoryAware, BeanClassLoaderAware, ApplicationContextAware {
 
     private Integer uId;
     private String company;
     private String location;
     private UserDAO userDao;
+
+    private ApplicationContext applicationContext;
+    private BeanFactory beanFactory;
 
     public void queryUserInfo() {
         System.out.println("queryUserInfo: " + userDao.queryUserName(uId) + "," + company + "," + location);
@@ -59,5 +64,33 @@ public class User implements InitializingBean, DisposableBean {
     @Override
     public void destroy() throws Exception {
         System.out.println("User.destroy()");
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        System.out.println("classloader is: " + classLoader);
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("bean name is : " + name);
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
     }
 }
