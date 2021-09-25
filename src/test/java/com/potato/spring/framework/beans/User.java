@@ -1,11 +1,14 @@
 package com.potato.spring.framework.beans;
 
+import com.potato.spring.framework.beans.factory.DisposableBean;
+import com.potato.spring.framework.beans.factory.InitializingBean;
+
 /**
  * @author potato
  * @date 2021/9/19 6:05 下午
  * @blame
  */
-public class User {
+public class User implements InitializingBean, DisposableBean {
 
     private Integer uId;
     private String company;
@@ -46,5 +49,15 @@ public class User {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDao = userDAO;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("User.afterPropertiesSet()");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("User.destroy()");
     }
 }

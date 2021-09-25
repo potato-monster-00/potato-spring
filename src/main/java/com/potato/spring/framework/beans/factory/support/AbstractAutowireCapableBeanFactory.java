@@ -1,15 +1,20 @@
 package com.potato.spring.framework.beans.factory.support;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.potato.spring.framework.beans.BeansException;
 import com.potato.spring.framework.beans.PropertyValue;
 import com.potato.spring.framework.beans.PropertyValues;
+import com.potato.spring.framework.beans.factory.DisposableBean;
+import com.potato.spring.framework.beans.factory.InitializingBean;
 import com.potato.spring.framework.beans.factory.config.AutowireCapableBeanFactory;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
 import com.potato.spring.framework.beans.factory.config.BeanPostProcessor;
 import com.potato.spring.framework.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Optional;
 
 /**
  * @author potato
@@ -31,18 +36,38 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Instantiation of bean failed.", e);
         }
 
+        registerDisposableBeanIfNecessary(name, bean, beanDefinition);
         addSingleton(name, bean);
         return bean;
     }
 
+    protected void registerDisposableBeanIfNecessary(String name, Object bean, BeanDefinition beanDefinition) {
+        if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
+            registerDisposableBean(name, new DisposableBeanAdapter(bean, name, beanDefinition));
+        }
+    }
+
     protected Object initialization(String name, Object bean, BeanDefinition beanDefinition) {
         Object wrappedBean = applyBeanPostProcessorBeforeInitialization(bean, name);
-        invokeInitMethods(name, wrappedBean, beanDefinition);
+        try {
+            invokeInitMethods(name, wrappedBean, beanDefinition);
+        } catch (Exception e) {
+            throw new BeansException("Invocation of init method of bean[" +  name + "]failed", e);
+        }
         wrappedBean = applyBeanPostProcessorAfterInitialization(bean, name);
         return wrappedBean;
     }
 
-    private void invokeInitMethods(String name, Object wrappedBean, BeanDefinition beanDefinition) {
+    private void invokeInitMethods(String name, Object bean, BeanDefinition beanDefinition) throws Exception {
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean) bean).afterPropertiesSet();
+        }
+
+        String initMethodName = beanDefinition.getInitMethodName();
+        if (StrUtil.isNotEmpty(initMethodName)) {
+            Method initMethod = beanDefinition.getBeanClass().getMethod(initMethodName);
+            initMethod.invoke(bean);
+        }
     }
 
     @Override

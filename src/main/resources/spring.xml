@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean id="userDao" class="com.potato.spring.framework.beans.UserDAO"/>
+    <bean id="userDao" class="com.potato.spring.framework.beans.UserDAO" init-method="initDataMethod" destroy-method="destroyDataMethod"/>
 
     <bean id="user" class="com.potato.spring.framework.beans.User">
         <property name="uId" value="10001"/>

@@ -104,7 +104,9 @@ public class ApiTest {
 
     @Test
     public void test_ClassPathXml() {
-        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_post_processor.xml");
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
         User user = applicationContext.getBean("user", User.class);
         user.queryUserInfo();
     }

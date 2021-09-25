@@ -22,6 +22,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         ConfigurableListableBeanFactory beanFactory = getBeanFactory();
         invokeBeanFactoryPostProcessors(beanFactory);
         registerBeanPostProcessors(beanFactory);
+        beanFactory.preInstantiateSingletons();
     }
 
     private void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
@@ -59,6 +60,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     @Override
     public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
         return getBeanFactory().getBean(name, requiredType);
+    }
+
+    @Override
+    public void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+    }
+
+    @Override
+    public void close() {
+        getBeanFactory().destroySingleBeans();
     }
 
     protected abstract ConfigurableListableBeanFactory getBeanFactory();

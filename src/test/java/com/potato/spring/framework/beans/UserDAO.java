@@ -12,13 +12,18 @@ public class UserDAO {
 
     public static Map<Integer, String> map = new HashMap<>();
 
-    static {
+    public String queryUserName(Integer uId) {
+        return map.get(uId);
+    }
+
+    public void initDataMethod() {
         map.put(10001, "p1");
         map.put(10002, "p2");
         map.put(10003, "p3");
     }
 
-    public String queryUserName(Integer uId) {
-        return map.get(uId);
+    public void destroyDataMethod() {
+        System.out.println("destroy method");
+        map.clear();
     }
 }
