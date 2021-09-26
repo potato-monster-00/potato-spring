@@ -12,6 +12,7 @@ import com.potato.spring.framework.common.MyBeanPostProcessor;
 import com.potato.spring.framework.context.support.ClassPathXmlApplicationContext;
 import com.potato.spring.framework.core.io.DefaultResourceLoader;
 import com.potato.spring.framework.core.io.Resource;
+import com.potato.spring.framework.event.CustomEvent;
 import org.junit.Before;
 import org.junit.Test;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
@@ -137,5 +138,13 @@ public class ApiTest {
 
         User user = applicationContext.getBean("user", User.class);
         user.queryUserInfo();
+    }
+
+    @Test
+    public void test_event() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_event.xml");
+        applicationContext.publishEvent(new CustomEvent(applicationContext, 1234L, "success"));
+
+        applicationContext.registerShutdownHook();
     }
 }

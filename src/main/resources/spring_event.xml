@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<beans>
+    <bean class="com.potato.spring.framework.event.CustomEventListener"/>
+    <bean class="com.potato.spring.framework.event.ContextClosedEventListener"/>
+    <bean class="com.potato.spring.framework.event.ContextRefreshedEventListener"/>
+</beans>
