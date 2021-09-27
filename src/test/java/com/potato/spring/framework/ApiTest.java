@@ -1,10 +1,13 @@
 package com.potato.spring.framework;
 
 import cn.hutool.core.io.IoUtil;
-import com.potato.spring.framework.beans.PropertyValue;
-import com.potato.spring.framework.beans.PropertyValues;
-import com.potato.spring.framework.beans.User;
-import com.potato.spring.framework.beans.UserDAO;
+import com.potato.spring.framework.aop.AdvisedSupport;
+import com.potato.spring.framework.aop.TargetSource;
+import com.potato.spring.framework.aop.UserServiceInterceptor;
+import com.potato.spring.framework.aop.aspectj.AspectJExpressionPointcut;
+import com.potato.spring.framework.aop.framework.Cglib2AopProxy;
+import com.potato.spring.framework.aop.framework.JdkDynamicAopProxy;
+import com.potato.spring.framework.beans.*;
 import com.potato.spring.framework.beans.factory.config.BeanReference;
 import com.potato.spring.framework.beans.factory.xml.XmlBeanDefinitionReader;
 import com.potato.spring.framework.common.MyBeanFactoryPostProcessor;
@@ -146,5 +149,19 @@ public class ApiTest {
         applicationContext.publishEvent(new CustomEvent(applicationContext, 1234L, "success"));
 
         applicationContext.registerShutdownHook();
+    }
+
+    @Test
+    public void test_dynamic() {
+        IUserService userService = new UserService();
+        AdvisedSupport advised = new AdvisedSupport();
+        advised.setTargetSource(new TargetSource(userService));
+        advised.setMethodInterceptor(new UserServiceInterceptor());
+        advised.setMethodMatcher(new AspectJExpressionPointcut("execution(* com.potato.spring.framework.beans.IUserService.*(..))"));
+
+        IUserService proxy_jdk = (IUserService) new JdkDynamicAopProxy(advised).getProxy();
+        System.out.println("jdk proxy---- " + proxy_jdk.queryUserInfo());
+        IUserService proxy_cglib = (IUserService) new Cglib2AopProxy(advised).getProxy();
+        System.out.println("cglib proxy ---- " + proxy_cglib.register("potato"));
     }
 }
