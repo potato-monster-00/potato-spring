@@ -2,7 +2,7 @@ package com.potato.spring.framework.aop.aspectj;
 
 import com.potato.spring.framework.aop.ClassFilter;
 import com.potato.spring.framework.aop.MethodMatcher;
-import com.potato.spring.framework.aop.PointCut;
+import com.potato.spring.framework.aop.Pointcut;
 import org.aspectj.weaver.tools.PointcutExpression;
 import org.aspectj.weaver.tools.PointcutParser;
 import org.aspectj.weaver.tools.PointcutPrimitive;
@@ -16,7 +16,7 @@ import java.util.Set;
  * @date 2021/9/27 9:51 下午
  * @blame
  */
-public class AspectJExpressionPointcut implements PointCut, ClassFilter, MethodMatcher {
+public class AspectJExpressionPointcut implements Pointcut, ClassFilter, MethodMatcher {
 
     private static final Set<PointcutPrimitive> SUPPORT_PRIMITIVE = new HashSet<>();
 

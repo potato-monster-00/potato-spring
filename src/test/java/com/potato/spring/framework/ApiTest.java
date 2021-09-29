@@ -164,4 +164,11 @@ public class ApiTest {
         IUserService proxy_cglib = (IUserService) new Cglib2AopProxy(advised).getProxy();
         System.out.println("cglib proxy ---- " + proxy_cglib.register("potato"));
     }
+
+    @Test
+    public void test_aop() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_autoproxy.xml");
+        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        userService.queryUserInfo();
+    }
 }
