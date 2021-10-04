@@ -1,5 +1,7 @@
 package com.potato.spring.framework.beans;
 
+import com.potato.spring.framework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import java.util.Map;
  * @date 2021/9/21 9:38 下午
  * @blame
  */
+@Component
 public class UserDAO {
 
     public static Map<Integer, String> map = new HashMap<>();

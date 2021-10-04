@@ -1,6 +1,7 @@
 package com.potato.spring.framework.context.annotation;
 
 import cn.hutool.core.util.StrUtil;
+import com.potato.spring.framework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import com.potato.spring.framework.beans.factory.config.BeanDefinition;
 import com.potato.spring.framework.beans.factory.support.BeanDefinitionRegistry;
 import com.potato.spring.framework.stereotype.Component;
@@ -32,6 +33,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
                 registry.registerBeanDefinition(determineBeanName(beanDefinition), beanDefinition);
             }
         }
+
+        registry.registerBeanDefinition("com.potato.spring.framework.context.annotation.internalAutowiredAnnotationProcessor", new BeanDefinition(AutowiredAnnotationBeanPostProcessor.class));
     }
 
     private String resolveBeanScope(BeanDefinition beanDefinition) {

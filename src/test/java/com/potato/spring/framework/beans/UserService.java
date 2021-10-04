@@ -1,5 +1,7 @@
 package com.potato.spring.framework.beans;
 
+import com.potato.spring.framework.beans.factory.annotation.Autowired;
+import com.potato.spring.framework.beans.factory.annotation.Value;
 import com.potato.spring.framework.stereotype.Component;
 
 import java.util.Random;
@@ -12,7 +14,11 @@ import java.util.Random;
 @Component("userService")
 public class UserService implements IUserService {
 
+    @Value(value = "${token}")
     private String token;
+
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public String queryUserInfo() {
@@ -21,7 +27,7 @@ public class UserService implements IUserService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return "potato";
+        return userDAO.queryUserName(10001) + ", " + token;
     }
 
     @Override

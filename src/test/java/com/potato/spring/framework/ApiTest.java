@@ -186,4 +186,11 @@ public class ApiTest {
         System.out.println("测试结果：" + userService);
     }
 
+    @Test
+    public void test_scan_annotation() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-annotation.xml");
+        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        System.out.println(userService.queryUserInfo());
+    }
+
 }
